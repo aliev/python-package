@@ -1,11 +1,11 @@
-site_name: {{cookiecutter.project_name}}
-repo_url: https://github.com/{{cookiecutter.author_github_handle}}/{{cookiecutter.project_name}}
-site_url: https://{{cookiecutter.author_github_handle}}.github.io/{{cookiecutter.project_name}}
-site_description: {{cookiecutter.project_description}}
-site_author: {{cookiecutter.author}}
+site_name: {{project_name}}
+repo_url: https://github.com/{{author_github_handle}}/{{project_name}}
+site_url: https://{{author_github_handle}}.github.io/{{project_name}}
+site_description: {{project_description}}
+site_author: {{author}}
 edit_uri: edit/main/docs/
-repo_name: {{cookiecutter.author_github_handle}}/{{cookiecutter.project_name}}
-copyright: Maintained by <a href="https://{{cookiecutter.author_github_handle}}.com">{{cookiecutter.author_github_handle}}</a>.
+repo_name: {{author_github_handle}}/{{project_name}}
+copyright: Maintained by <a href="https://{{author_github_handle}}.com">{{author_github_handle}}</a>.
 
 nav:
   - Home: index.md
@@ -16,10 +16,10 @@ plugins:
       handlers:
         python:
           paths: [
-            {%- if cookiecutter.layout == "src" -%}
-            "src/{{cookiecutter.project_slug}}"
+            {%- if layout == "src" -%}
+            "src/{{project_slug}}"
             {%- else -%}
-            "{{cookiecutter.project_slug}}"
+            "{{project_slug}}"
             {%- endif -%}
             ]
 theme:
@@ -47,9 +47,9 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/{{cookiecutter.author_github_handle}}/{{cookiecutter.project_name}}
+      link: https://github.com/{{author_github_handle}}/{{project_name}}
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/{{cookiecutter.project_name}}
+      link: https://pypi.org/project/{{project_name}}
 
 markdown_extensions:
   - toc:

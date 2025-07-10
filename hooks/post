@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+import json
+import os
+import sys
+import shutil
+from typing import Any, TypedDict
+
+class Input(TypedDict):
+    answers: dict[str, Any]
+    template_dir: str
+    project_dir: str
+
+
+def remove_file(project_dir: str, filepath: str) -> None:
+    os.remove(os.path.join(project_dir, filepath))
+
+
+def remove_dir(project_dir: str, filepath: str) -> None:
+    shutil.rmtree(os.path.join(project_dir, filepath))
+
+
+def move_file(project_dir: str, src: str, target: str) -> None:
+    os.rename(os.path.join(project_dir, src), os.path.join(project_dir, target))
+
+
+def move_dir(project_dir: str, src: str, target: str) -> None:
+    shutil.move(os.path.join(project_dir, src), os.path.join(project_dir, target))
+
+
+def main() -> None:
+    context: Input = json.load(sys.stdin)
+    answers = context["answers"]
+    project_slug = answers["project_slug"]
+    project_dir = os.path.join(context["output_dir"], answers["project_name"])
+
+    if answers["include_github_actions"] != "y":
+        remove_dir(project_dir, ".github")
+    else:
+        if answers["mkdocs"] != "y" and answers["publish_to_pypi"] == "n":
+            remove_file(project_dir, ".github/workflows/on-release-main.yml")
+
+    if answers["mkdocs"] != "y":
+        remove_dir(project_dir, "docs")
+        remove_file(project_dir, "mkdocs.yml")
+
+    if answers["dockerfile"] != "y":
+        remove_file(project_dir, "Dockerfile")
+
+    if answers["codecov"] != "y":
+        remove_file(project_dir, "codecov.yaml")
+        if answers["include_github_actions"] == "y":
+            remove_file(project_dir, ".github/workflows/validate-codecov-config.yml")
+
+    if answers["devcontainer"] != "y":
+        remove_dir(project_dir, ".devcontainer")
+
+    if answers["open_source_license"] == "MIT license":
+        move_file(project_dir, "LICENSE_MIT", "LICENSE")
+        for f in ["LICENSE_BSD", "LICENSE_ISC", "LICENSE_APACHE", "LICENSE_GPL"]:
+            remove_file(project_dir, f)
+    elif answers["open_source_license"] == "BSD license":
+        move_file(project_dir, "LICENSE_BSD", "LICENSE")
+        for f in ["LICENSE_MIT", "LICENSE_ISC", "LICENSE_APACHE", "LICENSE_GPL"]:
+            remove_file(project_dir, f)
+    elif answers["open_source_license"] == "ISC license":
+        move_file(project_dir, "LICENSE_ISC", "LICENSE")
+        for f in ["LICENSE_MIT", "LICENSE_BSD", "LICENSE_APACHE", "LICENSE_GPL"]:
+            remove_file(project_dir, f)
+    elif answers["open_source_license"] == "Apache Software License 2.0":
+        move_file(project_dir, "LICENSE_APACHE", "LICENSE")
+        for f in ["LICENSE_MIT", "LICENSE_BSD", "LICENSE_ISC", "LICENSE_GPL"]:
+            remove_file(project_dir, f)
+    elif answers["open_source_license"] == "GNU General Public License v3":
+        move_file(project_dir, "LICENSE_GPL", "LICENSE")
+        for f in ["LICENSE_MIT", "LICENSE_BSD", "LICENSE_ISC", "LICENSE_APACHE"]:
+            remove_file(project_dir, f)
+    else:  # Not open source
+        for f in ["LICENSE_GPL", "LICENSE_MIT", "LICENSE_BSD", "LICENSE_ISC", "LICENSE_APACHE"]:
+            remove_file(project_dir, f)
+
+    if answers["layout"] == "src":
+        if os.path.isdir(os.path.join(project_dir, "src")):
+            remove_dir(project_dir, "src")
+        move_dir(project_dir, project_slug, os.path.join("src", project_slug))
+
+
+if __name__ == "__main__":
+    main()

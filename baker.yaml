@@ -1,0 +1,84 @@
+schemaVersion: v1
+questions:
+  author:
+    type: str
+    default: Florian Maas
+  email:
+    type: str
+    default: fpgmaas@gmail.com
+  author_github_handle:
+    type: str
+    default: fpgmaas
+  project_name:
+    type: str
+    default: example-project
+    validation:
+      condition: "project_name|regex('^[-a-zA-Z][-a-zA-Z0-9]+$')"
+      error_message: Project name may contain letters, numbers and hyphens and must start with a letter.
+  project_slug:
+    type: str
+    default: "{{ project_name|lower|replace('-', '_') }}"
+    validation:
+      condition: "project_slug|regex('^[_a-zA-Z][_a-zA-Z0-9]+$')"
+      error_message: Project slug must be a valid Python identifier.
+  project_description:
+    type: str
+    default: This is a template repository for Python projects that use uv for their dependency management.
+  layout:
+    type: str
+    default: flat
+    choices:
+      - flat
+      - src
+  include_github_actions:
+    type: str
+    default: y
+    choices:
+      - y
+      - n
+  publish_to_pypi:
+    type: str
+    default: y
+    choices:
+      - y
+      - n
+  deptry:
+    type: str
+    default: y
+    choices:
+      - y
+      - n
+  mkdocs:
+    type: str
+    default: y
+    choices:
+      - y
+      - n
+  codecov:
+    type: str
+    default: y
+    choices:
+      - y
+      - n
+  dockerfile:
+    type: str
+    default: y
+    choices:
+      - y
+      - n
+  devcontainer:
+    type: str
+    default: y
+    choices:
+      - y
+      - n
+  open_source_license:
+    type: str
+    default: MIT license
+    choices:
+      - MIT license
+      - BSD license
+      - ISC license
+      - Apache Software License 2.0
+      - GNU General Public License v3
+      - Not open source
