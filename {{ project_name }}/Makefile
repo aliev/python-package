@@ -12,15 +12,15 @@ check: ## Run code quality tools.
 	@uv run pre-commit run -a
 	@echo "🚀 Static type checking: Running mypy"
 	@uv run mypy
-{%- if cookiecutter.deptry == 'y' %}
+{%- if deptry == 'y' %}
 	@echo "🚀 Checking for obsolete dependencies: Running deptry"
-	@uv run deptry {% if cookiecutter.layout == "src" %}src{% else %}.{% endif %}
+	@uv run deptry {% if layout == "src" %}src{% else %}.{% endif %}
 {%- endif %}
 
 .PHONY: test
 test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
-{%- if cookiecutter.codecov == "y"%}
+{%- if codecov == "y"%}
 	@uv run python -m pytest --cov --cov-config=pyproject.toml --cov-report=xml
 {%- else %}
 	@uv run python -m pytest --doctest-modules
@@ -36,7 +36,7 @@ clean-build: ## Clean build artifacts
 	@echo "🚀 Removing build artifacts"
 	@uv run python -c "import shutil; import os; shutil.rmtree('dist') if os.path.exists('dist') else None"
 
-{%- if cookiecutter.publish_to_pypi == "y"%}
+{%- if publish_to_pypi == "y"%}
 
 .PHONY: publish
 publish: ## Publish a release to PyPI.
@@ -47,7 +47,7 @@ publish: ## Publish a release to PyPI.
 build-and-publish: build publish ## Build and publish.
 {%- endif%}
 
-{%- if cookiecutter.mkdocs == "y" %}
+{%- if mkdocs == "y" %}
 
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors

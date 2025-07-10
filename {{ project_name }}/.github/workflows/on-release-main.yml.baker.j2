@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-{% if cookiecutter.publish_to_pypi == "y" %}
+{% if publish_to_pypi == "y" %}
   set-version:
     runs-on: ubuntu-24.04
     steps:
@@ -52,9 +52,9 @@ jobs:
         env:
           UV_PUBLISH_TOKEN: {% raw %}${{ secrets.PYPI_TOKEN }}{% endraw %}
 {% endif %}
-{%- if cookiecutter.mkdocs == "y" %}
+{%- if mkdocs == "y" %}
   deploy-docs:
-    {%- if cookiecutter.publish_to_pypi == "y" %}
+    {%- if publish_to_pypi == "y" %}
     needs: publish
     {%- endif %}
     runs-on: ubuntu-latest
